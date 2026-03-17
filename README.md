@@ -23,13 +23,9 @@ A production-ready **Retrieval-Augmented Generation (RAG)** system built with La
 
 ## 🔄 Application Flow
 
-The system follows a linear pipeline from "messy" data to conversational insights:
+The system follows a 10-phase pipeline, from "messy" data to conversational insights. This architecture ensures high-quality retrieval and legally-sound generation.
 
-1.  **Data Prep (Cleaning)**: Raw CSV exports are converted into standardized `.txt` files to preserve metadata and structure.
-2.  **Multimodal Ingestion**: Smart loaders handle PDF, Word, PowerPoint, and Text.
-3.  **OCR Engine (AWS Textract)**: Automatically triggers for scanned documents or images.
-4.  **Vector Store (ChromaDB)**: High-performance indexing using AWS Bedrock Embeddings.
-5.  **Conversational RAG**: Claude 3.5 Sonnet generates answers with full source citations and session memory.
+[Ver sección detallada abajo](#-the-10-phases-of-our-rag)
 
 ---
 
@@ -63,6 +59,25 @@ Ingestion pipeline (offline):
   Documents → MultiFormatDocumentLoader → OCRProcessor (optional)
             → MetadataAwareTextSplitter → ChromaVectorStore
 ```
+
+---
+
+## 🏗️ The 10 Phases of Our RAG
+
+Detailed breakdown of how each stage is implemented in this repository:
+
+| Phase | Description | Key Component | Model / Tool |
+|---|---|---|---|
+| **1. Ingesta** | Standardizing raw data (CSV/Files) into `.txt`. | [data_cleaning.py](src/clean/data_cleaning.py) | Python/Pandas |
+| **2. Limpieza** | LLM-based filtering to discard spam or noise. | [email_curator.py](src/ingestion/email_curator.py) | Claude 3.5 Sonnet |
+| **3. Chunking** | Smart fragmentation respecting email structure. | [text_splitter.py](src/ingestion/text_splitter.py) | EmailAwareSplitter |
+| **4. Embedding** | Transforming text into semantic vectors. | [aws_embeddings.py](src/embeddings/aws_embeddings.py) | Titan Embed v2 |
+| **5. Vector Store** | Persistent storage and semantic index. | [chroma_store.py](src/vectorstore/chroma_store.py) | ChromaDB |
+| **6. Query Parser** | Intent analysis and metadata filter extraction. | [query_parser.py](src/retrieval/query_parser.py) | Claude 3.5 Sonnet |
+| **7. Hybrid Search** | Semantic search + metadata filters + Reranking. | [retriever.py](src/retrieval/retriever.py) | SmartRetriever |
+| **8. Generación** | Context-aware generation with legal constraints. | [rag_chain.py](src/chains/rag_chain.py) | Claude 3.5 Sonnet |
+| **9. Respuesta** | Final output with explicit source citations. | [rag_chain.py](src/chains/rag_chain.py) | LCEL Chain |
+| **10. UI** | Interactive web interface for lawyers. | [streamlit_app.py](app/streamlit_app.py) | Streamlit |
 
 ---
 
