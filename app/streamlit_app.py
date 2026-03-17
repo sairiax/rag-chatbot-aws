@@ -4,6 +4,7 @@ LegalMail RAG — Streamlit conversational interface.
 Run with:
     streamlit run app/streamlit_app.py
 """
+
 from __future__ import annotations
 
 import sys
@@ -63,12 +64,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 @st.cache_resource(show_spinner="Conectando a AWS Bedrock y ChromaDB…")
 def _load_base_components():
     settings = Settings()
     embeddings = get_embeddings(settings)
     vector_store = ChromaVectorStore(embeddings, settings)
     return settings, vector_store
+
 
 def _get_or_create_rag_chain(
     settings: Settings, vector_store: ChromaVectorStore
@@ -82,12 +85,15 @@ def _get_or_create_rag_chain(
         )
     return st.session_state["rag_chain"]
 
+
 def _get_session_id() -> str:
     if "session_id" not in st.session_state:
         st.session_state["session_id"] = str(uuid.uuid4())
     return st.session_state["session_id"]
 
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
+
 
 def render_sidebar(vector_store: ChromaVectorStore) -> Dict[str, Any]:
     st.sidebar.title("⚖️ LegalMail RAG")
@@ -105,12 +111,16 @@ def render_sidebar(vector_store: ChromaVectorStore) -> Dict[str, Any]:
 
     # ── Advanced Filters ──────────────────────────────────────────────────
     st.sidebar.subheader("🔍 Filtros manuales")
-    st.sidebar.caption("El LLM también aplica filtros automáticamente según tu pregunta.")
-    
+    st.sidebar.caption(
+        "El LLM también aplica filtros automáticamente según tu pregunta."
+    )
+
     # 1. Thread Filter
     unique_threads = ["Todos"] + vector_store.get_unique_metadata_values("thread_id")
-    selected_thread = st.sidebar.selectbox("Filtro por Hilo (Proyecto/Asunto)", unique_threads)
-    
+    selected_thread = st.sidebar.selectbox(
+        "Filtro por Hilo (Proyecto/Asunto)", unique_threads
+    )
+
     # 2. Sender Filter
     unique_senders = ["Todos"] + vector_store.get_unique_metadata_values("from_name")
     selected_sender = st.sidebar.selectbox("Filtro por Remitente", unique_senders)
@@ -137,12 +147,16 @@ def render_sidebar(vector_store: ChromaVectorStore) -> Dict[str, Any]:
         st.session_state["rag_chain"].clear_session(_get_session_id())
         st.session_state["messages"] = []
         st.rerun()
-        
+
     return filters
+
 
 # ── Chat ──────────────────────────────────────────────────────────────────────
 
-def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any]) -> None:
+
+def render_chat(
+    rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any]
+) -> None:
     # Setup base manual filters
     filter_dict = build_metadata_filter(**manual_filters) if manual_filters else None
     rag_chain.set_filter(filter_dict)
@@ -153,13 +167,19 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
-        
+
         # Suggested initial questions
         with st.chat_message("assistant"):
-            st.markdown("¡Hola! Soy tu asistente legal corporativo. Puedes preguntarme sobre proyectos, contratos o due diligence. Por ejemplo:")
+            st.markdown(
+                "¡Hola! Soy tu asistente legal corporativo. Puedes preguntarme sobre proyectos, contratos o due diligence. Por ejemplo:"
+            )
             st.markdown("- *¿Cuáles son los riesgos del Proyecto Ámbar?*")
-            st.markdown("- *¿Qué dijo Jaime Cortés sobre los trabajadores falsos autónomos?*")
-            st.markdown("- *Resume el hilo de correos sobre la due diligence de Tecnalia.*")
+            st.markdown(
+                "- *¿Qué dijo Jaime Cortés sobre los trabajadores falsos autónomos?*"
+            )
+            st.markdown(
+                "- *Resume el hilo de correos sobre la due diligence de Tecnalia.*"
+            )
 
     for msg in st.session_state["messages"]:
         with st.chat_message(msg["role"]):
@@ -180,16 +200,12 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
                     answer = result["answer"]
                     sources = result["source_documents"]
                     st.markdown(answer)
-                        
+
                     if sources:
                         _render_sources(sources)
 
                     st.session_state["messages"].append(
-                        {
-                            "role": "assistant", 
-                            "content": answer, 
-                            "sources": sources
-                        }
+                        {"role": "assistant", "content": answer, "sources": sources}
                     )
 
                 except Exception as exc:
@@ -198,6 +214,7 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
                     st.session_state["messages"].append(
                         {"role": "assistant", "content": err, "sources": []}
                     )
+
 
 def _render_sources(sources: List) -> None:
     if not sources:
@@ -215,19 +232,21 @@ def _render_sources(sources: List) -> None:
             with col_info:
                 st.markdown(f"**{i}. De: {sender}** (Fecha: {date})")
                 st.caption(f"Asunto: *{subject}*")
-                
+
                 parts = []
                 if "chunk_index" in meta:
-                    parts.append(f"Fragmento {meta['chunk_index'] + 1}/{meta.get('total_chunks', '?')}")
+                    parts.append(
+                        f"Fragmento {meta['chunk_index'] + 1}/{meta.get('total_chunks', '?')}"
+                    )
                 if meta.get("has_attachments"):
                     parts.append(f"📎 {meta.get('attachments')}")
-                
+
                 # Format similarity score as percentage with color coding
                 if "similarity_score" in meta:
                     try:
                         score = float(meta["similarity_score"])
                         sim_pct = max(0, min(100, score * 100.0))
-                        
+
                         # Determine color emoji
                         if sim_pct >= 85:
                             color_emoji = "🟢"
@@ -237,14 +256,14 @@ def _render_sources(sources: List) -> None:
                             color_emoji = "🟠"
                         else:
                             color_emoji = "🔴"
-                            
+
                         parts.append(f"{color_emoji} Relevancia: {sim_pct:.1f}%")
                     except (ValueError, TypeError):
                         pass
-                
+
                 if parts:
                     st.caption(" · ".join(parts))
-                    
+
                 st.markdown(
                     f'<div class="source-preview">{doc.page_content[:400].strip()}…</div>',
                     unsafe_allow_html=True,
@@ -263,6 +282,7 @@ def _render_sources(sources: List) -> None:
             if i < len(sources):
                 st.divider()
 
+
 def main() -> None:
     try:
         settings, vector_store = _load_base_components()
@@ -271,7 +291,10 @@ def main() -> None:
         render_chat(rag_chain, manual_filters)
     except Exception as exc:
         st.error(f"❌ Error al inicializar LegalMail RAG: {exc}")
-        st.info("Asegúrate de que la DB de Chroma esté accesible y el índice esté generado.")
+        st.info(
+            "Asegúrate de que la DB de Chroma esté accesible y el índice esté generado."
+        )
+
 
 if __name__ == "__main__":
     main()

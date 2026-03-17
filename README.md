@@ -4,6 +4,35 @@ A production-ready **Retrieval-Augmented Generation (RAG)** system built with La
 
 ---
 
+## 💼 Business Context & Use Case
+
+### 🎯 Target Group
+- **Legal Departments**: Corporate legal teams managing high volumes of correspondence and contracts.
+- **Law Firms**: Attorneys performing due diligence or litigation discovery across multiple document types.
+- **Compliance Teams**: Professionals auditing communications for regulatory requirements.
+
+### 🛠️ Jobs to be Done (JTBD)
+*“Help me extract actionable insights from thousands of disparate emails and documents, so that I can reduce manual review time by 80% and focus on legal strategy rather than data retrieval.”*
+
+### 🚀 Key Use Cases
+1. **Litigation Support**: Quickly find specific mentions of concepts or evidence across years of email history.
+2. **Due Diligence**: Analyze data rooms (PDFs, PPTs, Docs) for specific clauses or risks during M&A.
+3. **Knowledge Management**: Create a centralized, searchable brain from historical legal archives.
+
+---
+
+## 🔄 Application Flow
+
+The system follows a linear pipeline from "messy" data to conversational insights:
+
+1.  **Data Prep (Cleaning)**: Raw CSV exports are converted into standardized `.txt` files to preserve metadata and structure.
+2.  **Multimodal Ingestion**: Smart loaders handle PDF, Word, PowerPoint, and Text.
+3.  **OCR Engine (AWS Textract)**: Automatically triggers for scanned documents or images.
+4.  **Vector Store (ChromaDB)**: High-performance indexing using AWS Bedrock Embeddings.
+5.  **Conversational RAG**: Claude 3.5 Sonnet generates answers with full source citations and session memory.
+
+---
+
 ## Architecture
 
 ```
@@ -54,6 +83,9 @@ rag-university/
 │   │   ├── ocr_processor.py    # Tesseract OCR (scanned docs & images)
 │   │   └── text_splitter.py    # Recursive splitter + metadata enrichment
 │   │
+│   ├── clean/
+│   │   └── data_cleaning.py    # NEW: CSV to TXT converter for legacy emails
+│   │
 │   ├── embeddings/
 │   │   └── aws_embeddings.py   # BedrockEmbeddings factory
 │   │
@@ -76,7 +108,8 @@ rag-university/
 │   └── index_documents.py      # CLI batch indexing tool
 │
 └── data/
-    ├── raw/                    # Drop source documents here
+    ├── raw/                    # Put raw CSV/files here
+    ├── clean/                  # Target for cleaned files (TXT)
     └── chroma_db/              # ChromaDB persisted storage
 ```
 
@@ -143,6 +176,19 @@ Go to **AWS Console → Bedrock → Model access** and request access for:
 
 ---
 
+## 🧹 Data Pre-processing
+
+If you are working with legacy email exports (CSVs), you must clean and standardize them before indexing:
+
+1. Place your CSV files (e.g., `correos_legales.csv`) in `data/raw/`.
+2. Run the cleaning script:
+   ```bash
+   python3 src/clean/data_cleaning.py
+   ```
+3. The script will generate standardized `.txt` files in `data/clean/`, ready for indexing.
+
+---
+
 ## Usage
 
 ### Option A — Streamlit chatbot (recommended)
@@ -160,14 +206,14 @@ streamlit run app/streamlit_app.py
 ### Option B — CLI batch indexing
 
 ```bash
-# Index everything in data/raw/ (with OCR)
+# Index cleaned documents in data/clean/
+python scripts/index_documents.py --dir data/clean
+
+# Index raw documents (with OCR)
 python scripts/index_documents.py --dir data/raw --ocr
 
 # Clear existing index and re-index
-python scripts/index_documents.py --dir data/raw --ocr --clear
-
-# Top-level only (no sub-directories)
-python scripts/index_documents.py --dir data/raw --no-recursive
+python scripts/index_documents.py --dir data/clean --clear
 ```
 
 ---

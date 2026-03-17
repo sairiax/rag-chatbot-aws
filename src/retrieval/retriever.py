@@ -90,14 +90,14 @@ class SmartRetriever:
         
         Consulta: {query}
         
-        Evalúa cada fragmento a continuación. Para cada uno, determina si aporta información ÚTIL para responder a la consulta.
-        Responde exclusivamente con una lista de índices (0, 1, 2...) de los fragmentos que SI son relevantes, separados por comas.
-        Si NINGUNO es relevante, responde con "NINGUNO".
+        Evalúa cada fragmento a continuación. Para cada uno, determina si aporta información ÚTIL, MENCIONA el tema o está RELACIONADO con la consulta, aunque sea de forma parcial.
+        Responde exclusivamente con una lista de índices (0, 1, 2...) de los fragmentos que SI tienen alguna relación, separados por comas.
+        Si NINGUNO tiene relación alguna, responde con "NINGUNO".
         
         Fragmentos:
         {fragments}
         
-        Índices relevantes:""")
+        Índices relacionados o útiles:""")
 
         fragments_text = ""
         for i, doc in enumerate(documents):
