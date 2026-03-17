@@ -6,12 +6,10 @@ Run with:
 """
 from __future__ import annotations
 
-import os
 import sys
-import tempfile
 import uuid
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Any
 
 import streamlit as st
 
@@ -117,11 +115,19 @@ def render_sidebar(vector_store: ChromaVectorStore) -> Dict[str, Any]:
     unique_senders = ["Todos"] + vector_store.get_unique_metadata_values("from_name")
     selected_sender = st.sidebar.selectbox("Filtro por Remitente", unique_senders)
 
+    # 3. Date Filter (Mes)
+    unique_dates = vector_store.get_unique_metadata_values("date")
+    unique_months = sorted(list(set(d[:7] for d in unique_dates if len(d) >= 7)))
+    unique_months = ["Todos"] + unique_months
+    selected_month = st.sidebar.selectbox("Filtro por Mes (YYYY-MM)", unique_months)
+
     filters = {}
     if selected_thread != "Todos":
         filters["thread_id"] = selected_thread
     if selected_sender != "Todos":
         filters["from_name"] = selected_sender
+    if selected_month != "Todos":
+        filters["date"] = selected_month
 
     st.sidebar.divider()
 
@@ -159,9 +165,6 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
             if msg["role"] == "assistant":
-                if msg.get("parsed_query"):
-                    with st.expander("🔍 Detalles de búsqueda (Query Parser)"):
-                        st.json(msg["parsed_query"])
                 if msg.get("sources"):
                     _render_sources(msg["sources"])
 
@@ -176,12 +179,7 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
                     result = rag_chain.invoke(prompt, session_id=_get_session_id())
                     answer = result["answer"]
                     sources = result["source_documents"]
-                    parsed = result.get("parsed_query", {})
-
                     st.markdown(answer)
-                    
-                    with st.expander("🔍 Detalles de búsqueda (Query Parser)"):
-                        st.json(parsed)
                         
                     if sources:
                         _render_sources(sources)
@@ -190,8 +188,7 @@ def render_chat(rag_chain: ConversationalRAGChain, manual_filters: Dict[str, Any
                         {
                             "role": "assistant", 
                             "content": answer, 
-                            "sources": sources,
-                            "parsed_query": parsed
+                            "sources": sources
                         }
                     )
 
@@ -224,6 +221,20 @@ def _render_sources(sources: List) -> None:
                     parts.append(f"Fragmento {meta['chunk_index'] + 1}/{meta.get('total_chunks', '?')}")
                 if meta.get("has_attachments"):
                     parts.append(f"📎 {meta.get('attachments')}")
+                
+                # Format cosine similarity score as percentage
+                if "cosine_score" in meta:
+                    score = meta["cosine_score"]
+                    # Usually Chroma cosine distance is returned as distance (0 = identical, 2 = opposite direction)
+                    # Convert distance to similarity percentage: (2 - distance) / 2 * 100
+                    # or if it returns 1 - cosine_similarity (0 = identical, 1 = orthogonal, 2 = opposite)
+                    # We assume it's distance, so similarity is roughly (1 - score/2) * 100
+                    # or simpler: (1 - score) * 100 if score is between 0 and 1
+                    try:
+                        sim_pct = max(0, min(100, (1.0 - float(score)) * 100.0))
+                        parts.append(f"🎯 Relevancia: {sim_pct:.1f}%")
+                    except (ValueError, TypeError):
+                        pass
                 
                 if parts:
                     st.caption(" · ".join(parts))

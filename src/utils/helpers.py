@@ -44,11 +44,13 @@ def build_metadata_filter(
     if source:
         conditions.append({"source": source})
         
-    # Chroma standard operators: $contains
+    # Exact match operators
     if from_name:
-        conditions.append({"from_name": {"$contains": from_name}})
+        conditions.append({"from_name": from_name})
     if thread_id:
-        conditions.append({"thread_id": {"$contains": thread_id}})
+        conditions.append({"thread_id": thread_id})
+        
+    # Chroma standard operators: $contains
     if date:
         conditions.append({"date": {"$contains": date}})
 

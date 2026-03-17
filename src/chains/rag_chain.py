@@ -84,57 +84,18 @@ class ConversationalRAGChain:
         """Process a user question and return the answer + source documents."""
         logger.info(f"[session={session_id}] Invoking RAG chain")
 
-        # 1. Parse query for metadata filters
-        from src.retrieval.query_parser import QueryParser
-        from src.utils.helpers import build_metadata_filter
-        
-        parser = QueryParser(self.settings)
-        parsed = parser.parse_query(question)
-        
-        semantic_query = parsed.get("semantic_query", question)
-        filters = parsed.get("filters", {})
-        
-        # 2. Update filter dict for the chain (combining user UI filters and LLM filters)
-        # We can merge them. Currently self._current_filter holds the UI filter.
-        # Let's keep it simple: merge UI filter and LLM filters
-        merged_filters = {}
-        if self._current_filter:
-            merged_filters.update(self._current_filter)
-        if filters:
-            # Rebuild using our helper to get the proper Chromadb operators
-            llm_filter = build_metadata_filter(
-                from_name=filters.get("from_name"),
-                thread_id=filters.get("thread_id"),
-                date=filters.get("date")
-            )
-            if llm_filter:
-                if merged_filters:
-                    # ChromaDB uses {"$and": [{}, {}]} for combining
-                    merged_filters = {"$and": [merged_filters, llm_filter]}
-                else:
-                    merged_filters = llm_filter
-                
-        # Only rebuild chain if combined filter changed
-        if merged_filters != self._current_filter:
-            # We temporarily swap it just for this invocation, or permanently?
-            # It's better to build a temporary retriever for execution, but since
-            # LCEL chains bake the retriever in, we must rebuild the chain if we change the filter.
-            self._chain = self._build_chain(merged_filters)
-
+        # 1. We ONLY use manual UI filters (already set via set_filter).
+        # We no longer use LLM Query Parser for automated filters to ensure strict accuracy.
         result = self._chain.invoke(
-            {"input": semantic_query},
+            {"input": question},
             config={"configurable": {"session_id": session_id}},
         )
         
-        # Restore chain using just the UI filter if we merged
-        if merged_filters != self._current_filter:
-            self._chain = self._build_chain(self._current_filter)
-
         return {
             "answer": result["answer"],
             "source_documents": result.get("context", []),
             "session_id": session_id,
-            "parsed_query": parsed
+            "parsed_query": None
         }
 
     def set_filter(self, filter_dict: Optional[Dict[str, Any]]) -> None:

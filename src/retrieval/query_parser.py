@@ -22,18 +22,16 @@ Tu tarea es analizar la pregunta del usuario y extraer los filtros de búsqueda 
 
 Reglas de extracción:
 1. semantic_query: La pura intención de búsqueda (el tema principal, excluyendo nombres o fechas si se usan solo como filtro).
-2. from_name: Si el usuario menciona quién envió el correo (ej. "Enviado por Jaime", "Qué dijo Isabel"). Usa solo el nombre de pila o apellido.
-3. thread_id: Si el usuario menciona un proyecto, litigio, expediente o empresa (ej. "Proyecto Ámbar", "2026/SOC/1187"). 
-   - IMPORTANTE: Si es un número de expediente (ej. "2026/SOC/1187" o "2026/ARR/0341"), devuélvelo EXACTAMENTE COMO APARECE, no lo conviertas a snake_case.
-   - Si es un nombre de proyecto (ej. "Proyecto Ámbar"), conviértelo a snake_case (ej. "proyecto_ambar").
+2. from_name: Si el usuario menciona quién envió el correo (ej. "Jaime" o "Isabel"), busca y devuelve EXACTAMENTE la cadena correspondiente de esta lista de remitentes válidos: {valid_senders}. Si no hay ninguna coincidencia evidente, omite este filtro.
+3. thread_id: Si el usuario menciona un proyecto, litigio, expediente o empresa (ej. "Proyecto Ámbar" o "2026/SOC/1187"), busca y devuelve EXACTAMENTE la cadena correspondiente de esta lista de hilos válidos: {valid_threads}. Si no hay coincidencia, omítelo.
 4. date: Si el usuario menciona un año y mes. Usa formato YYYY-MM.
 
 Responde ÚNICAMENTE con un objeto JSON válido con este esquema exacto (omite las claves de filtros que no apliquen, NO las pongas nulas, simplemente no las incluyas en "filters"):
 {{
     "semantic_query": "texto a buscar sin filtros",
     "filters": {{
-        "from_name": "nombre",
-        "thread_id": "2026/SOC/1187",
+        "from_name": "Nombre Exacto de la Lista",
+        "thread_id": "hilo_exacto_de_la_lista",
         "date": "2026-03"
     }}
 }}
@@ -56,11 +54,24 @@ class QueryParser:
         self.prompt = ChatPromptTemplate.from_template(_QUERY_PARSER_PROMPT)
         self.chain = self.prompt | self.llm
 
-    def parse_query(self, query: str) -> Dict[str, Any]:
+    def parse_query(
+        self, 
+        query: str, 
+        valid_senders: list[str] = None, 
+        valid_threads: list[str] = None
+    ) -> Dict[str, Any]:
         """Parse natural language into semantic query + filters."""
         default_result = {"semantic_query": query, "filters": {}}
+        
+        senders_str = ", ".join(valid_senders) if valid_senders else "ninguno"
+        threads_str = ", ".join(valid_threads) if valid_threads else "ninguno"
+        
         try:
-            response = self.chain.invoke({"query": query})
+            response = self.chain.invoke({
+                "query": query,
+                "valid_senders": senders_str,
+                "valid_threads": threads_str
+            })
             text = response.content.strip()
             
             # Clean markdown JSON format if present

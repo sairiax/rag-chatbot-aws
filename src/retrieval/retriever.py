@@ -43,17 +43,24 @@ class SmartRetriever:
         """
         top_k = k or self.settings.top_k
 
-        search_kwargs: Dict[str, Any] = {"k": top_k}
-        if filter_dict:
-            search_kwargs["filter"] = filter_dict
+        def _get_docs_with_scores(query: str) -> List[Document]:
+            # For Chroma, lower distance logic applies if distance metric is L2 or Cosine
+            docs_with_scores = self.vector_store.similarity_search_with_score(
+                query, k=top_k, filter=filter_dict
+            )
+            docs = []
+            for doc, score in docs_with_scores:
+                # Add score to metadata
+                doc.metadata["cosine_score"] = score
+                docs.append(doc)
+            return docs
 
         logger.debug(
-            f"Building retriever — search_type={search_type}, k={top_k}, filter={filter_dict}"
+            f"Building retriever (with scores) — search_type={search_type}, k={top_k}, filter={filter_dict}"
         )
-        return self.vector_store.store.as_retriever(
-            search_type=search_type,
-            search_kwargs=search_kwargs,
-        )
+        
+        from langchain_core.runnables import RunnableLambda
+        return RunnableLambda(_get_docs_with_scores)
 
     # ──────────────────────────────────────────────────────────────────────
     # Direct search helpers (useful for scripts / debugging)
