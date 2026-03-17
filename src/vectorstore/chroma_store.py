@@ -35,6 +35,7 @@ class ChromaVectorStore:
                 collection_name=self.settings.chroma_collection_name,
                 embedding_function=self.embeddings,
                 persist_directory=self.settings.chroma_persist_dir,
+                collection_metadata={"hnsw:space": "cosine"}
             )
         return self._store
 
