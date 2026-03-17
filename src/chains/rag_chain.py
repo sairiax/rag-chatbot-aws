@@ -18,8 +18,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from langchain_classic.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains import create_history_aware_retriever, create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_aws import ChatBedrock
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
@@ -44,13 +44,16 @@ If it is already self-contained, return it as-is.
 """.strip()
 
 _QA_SYSTEM = """
-You are an expert assistant with access to a curated knowledge base. \
-Use ONLY the retrieved context below to answer the user's question. \
-If the answer is not found in the context, say so explicitly — do not fabricate information.
+Eres un asistente legal corporativo senior (LegalMail RAG). Tienes acceso a un archivo estructurado de correos electrónicos y expedientes.
 
-When possible, mention which document or source the information comes from.
+INSTRUCCIONES CRÍTICAS:
+1. Usa ÚNICAMENTE el contexto recuperado a continuación para responder.
+2. Si la respuesta no está en el contexto, dilo claramente y no inventes información.
+3. Sé analítico, exhaustivo y profesional. No te limites a dar respuestas cortas de una línea; sintetiza la información, explica el contexto de la situación y detalla las acciones u opiniones mencionadas en los correos.
+4. Usa formato Markdown (negritas para nombres/fechas, listas con viñetas) para hacer tu respuesta fácil de leer.
+5. Cita SIEMPRE tus fuentes mencionando explícitamente el remitente, el destinatario o el asunto del correo (ej. "Según el correo enviado por Jaime Cortés a Isabel...").
 
----
+--- CONTEXTO RECUPERADO ---
 {context}
 """.strip()
 
@@ -78,29 +81,60 @@ class ConversationalRAGChain:
     # ──────────────────────────────────────────────────────────────────────
 
     def invoke(self, question: str, session_id: str = "default") -> Dict[str, Any]:
-        """Process a user question and return the answer + source documents.
-
-        Args:
-            question: The user's natural-language question.
-            session_id: Unique identifier for the conversation (one per user/tab).
-
-        Returns:
-            dict with keys:
-              - ``answer``           — The generated answer string.
-              - ``source_documents`` — List of retrieved LangChain Documents.
-              - ``session_id``       — Echo of the session identifier.
-        """
+        """Process a user question and return the answer + source documents."""
         logger.info(f"[session={session_id}] Invoking RAG chain")
 
+        # 1. Parse query for metadata filters
+        from src.retrieval.query_parser import QueryParser
+        from src.utils.helpers import build_metadata_filter
+        
+        parser = QueryParser(self.settings)
+        parsed = parser.parse_query(question)
+        
+        semantic_query = parsed.get("semantic_query", question)
+        filters = parsed.get("filters", {})
+        
+        # 2. Update filter dict for the chain (combining user UI filters and LLM filters)
+        # We can merge them. Currently self._current_filter holds the UI filter.
+        # Let's keep it simple: merge UI filter and LLM filters
+        merged_filters = {}
+        if self._current_filter:
+            merged_filters.update(self._current_filter)
+        if filters:
+            # Rebuild using our helper to get the proper Chromadb operators
+            llm_filter = build_metadata_filter(
+                from_name=filters.get("from_name"),
+                thread_id=filters.get("thread_id"),
+                date=filters.get("date")
+            )
+            if llm_filter:
+                if merged_filters:
+                    # ChromaDB uses {"$and": [{}, {}]} for combining
+                    merged_filters = {"$and": [merged_filters, llm_filter]}
+                else:
+                    merged_filters = llm_filter
+                
+        # Only rebuild chain if combined filter changed
+        if merged_filters != self._current_filter:
+            # We temporarily swap it just for this invocation, or permanently?
+            # It's better to build a temporary retriever for execution, but since
+            # LCEL chains bake the retriever in, we must rebuild the chain if we change the filter.
+            self._chain = self._build_chain(merged_filters)
+
         result = self._chain.invoke(
-            {"input": question},
+            {"input": semantic_query},
             config={"configurable": {"session_id": session_id}},
         )
+        
+        # Restore chain using just the UI filter if we merged
+        if merged_filters != self._current_filter:
+            self._chain = self._build_chain(self._current_filter)
 
         return {
             "answer": result["answer"],
             "source_documents": result.get("context", []),
             "session_id": session_id,
+            "parsed_query": parsed
         }
 
     def set_filter(self, filter_dict: Optional[Dict[str, Any]]) -> None:
@@ -148,15 +182,17 @@ class ConversationalRAGChain:
             },
         )
 
-    def _build_retriever(self):
+    def _build_retriever(self, filter_dict: Optional[Dict[str, Any]] = None):
         from src.retrieval.retriever import SmartRetriever
 
         smart = SmartRetriever(self.vector_store, self.settings)
-        return smart.get_retriever(filter_dict=self._current_filter)
+        # Fall back to self._current_filter if none provided explicitly
+        active_filter = filter_dict if filter_dict is not None else self._current_filter
+        return smart.get_retriever(filter_dict=active_filter)
 
-    def _build_chain(self) -> RunnableWithMessageHistory:
+    def _build_chain(self, filter_dict: Optional[Dict[str, Any]] = None) -> RunnableWithMessageHistory:
         llm = self._build_llm()
-        retriever = self._build_retriever()
+        retriever = self._build_retriever(filter_dict=filter_dict)
 
         # Step 1 — History-aware retriever
         contextualize_prompt = ChatPromptTemplate.from_messages(

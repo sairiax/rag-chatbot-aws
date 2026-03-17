@@ -29,6 +29,9 @@ def format_sources_text(documents: List[Document]) -> str:
 def build_metadata_filter(
     file_type: str | None = None,
     source: str | None = None,
+    from_name: str | None = None,
+    thread_id: str | None = None,
+    date: str | None = None,
 ) -> dict | None:
     """Build a ChromaDB metadata filter dict from optional field values.
 
@@ -40,6 +43,14 @@ def build_metadata_filter(
         conditions.append({"file_type": file_type})
     if source:
         conditions.append({"source": source})
+        
+    # Chroma standard operators: $contains
+    if from_name:
+        conditions.append({"from_name": {"$contains": from_name}})
+    if thread_id:
+        conditions.append({"thread_id": {"$contains": thread_id}})
+    if date:
+        conditions.append({"date": {"$contains": date}})
 
     if not conditions:
         return None

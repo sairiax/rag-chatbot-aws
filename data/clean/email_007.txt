@@ -1,0 +1,8 @@
+De: Dra. Nuria Camps Ferrer <ncamps@campsferrer-legal.com>
+Para: D. Pablo Rueda González <p.rueda@techsolutions.io>
+Fecha: 2026-03-13 07:03:00
+Adjuntos: 03_Consulta_RGPD_Transferencia_Datos.docx
+ 
+Asunto: RE: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089
+Cuerpo:
+Quedan dos puntos pendientes reflejados en el documento: añadir la cláusula de auditoría del art. 28.3.h RGPD y especificar el mecanismo de transferencia en el módulo 2 de las CCT. Una vez subsanados estará listo para firma. Recuerde actualizar el RAT y notificar a su DPO.

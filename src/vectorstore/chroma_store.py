@@ -86,6 +86,24 @@ class ChromaVectorStore:
             search_type=search_type, search_kwargs=search_kwargs
         )
 
+    def get_unique_metadata_values(self, field: str) -> List[Any]:
+        """Return unique values for a given metadata field across the entire collection."""
+        try:
+            results = self.store._collection.get(include=["metadatas"])
+            metadatas = results.get("metadatas", [])
+            if not metadatas:
+                return []
+            
+            unique_vals = {meta.get(field) for meta in metadatas if meta and field in meta}
+            return sorted([v for v in unique_vals if v is not None])
+        except Exception as exc:
+            logger.error(f"Failed to get unique values for {field}: {exc}")
+            return []
+
+    def search_by_thread(self, thread_id: str) -> List[Document]:
+        """Retrieve all documents belonging to a specific email thread."""
+        return self.store.similarity_search("", k=100, filter={"thread_id": thread_id})
+
     # ──────────────────────────────────────────────────────────────────────
     # Admin
     # ──────────────────────────────────────────────────────────────────────

@@ -1,0 +1,314 @@
+[
+  {
+    "filename": "email_001.txt",
+    "subject": "RE: Proyecto Ámbar — Litigio PI y falsos autónomos — Actualización",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_002.txt",
+    "subject": "RE: Impugnación Acuerdos Junta — Aprobación demanda",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_003.txt",
+    "subject": "RE: URGENTE: Notificación de Demanda Laboral — Expediente 2026/SOC/1187",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_004.txt",
+    "subject": "RE: Revisión NDA — Ref. NDA/2026/TEC/55 — Recomendación final",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_005.txt",
+    "subject": "RE: Consulta Derecho Sucesorio — Herencia D. José Mª Alcántara — Ref. SUC/2026/044",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_006.txt",
+    "subject": "RE: Consulta sobre Contrato de Arrendamiento — Ref. 2026/ARR/0341",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_007.txt",
+    "subject": "RE: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_008.txt",
+    "subject": "RE: Sanción CNMC — Borrador Recurso de Alzada listo para revisión",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_009.txt",
+    "subject": "RE: URGENTE: Notificación de Demanda Laboral — Expediente 2026/SOC/1187",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_010.txt",
+    "subject": "RE: Proyecto Ámbar — Due Diligence — Preguntas sobre contencioso",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_011.txt",
+    "subject": "RE: Uso no autorizado — Actualización gestión MediaHouse",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_012.txt",
+    "subject": "Informe — Respuesta de Constructora Medina y estrategia a seguir",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_013.txt",
+    "subject": "RE: Consulta sobre Contrato de Arrendamiento — Ref. 2026/ARR/0341",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_014.txt",
+    "subject": "RE: Revisión NDA — Ref. NDA/2026/TEC/55 — Respuesta Corporativa Innovatech",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_015.txt",
+    "subject": "RE: Consulta Derecho Sucesorio — Herencia D. José Mª Alcántara — Ref. SUC/2026/044",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_016.txt",
+    "subject": "RE: Impugnación Acuerdos Junta — Estrategia procesal y medidas cautelares",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_017.txt",
+    "subject": "RE: URGENTE: Notificación de Demanda Laboral — Expediente 2026/SOC/1187",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_018.txt",
+    "subject": "RE: Proyecto Ámbar — Avance Due Diligence Legal — Semana 11/2026",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_019.txt",
+    "subject": "RE: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_020.txt",
+    "subject": "RE: Consulta sobre Contrato de Arrendamiento — Ref. 2026/ARR/0341",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_021.txt",
+    "subject": "RE: Sanción CNMC — Confirmación reunión y documentación adicional",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_022.txt",
+    "subject": "RE: REQUERIMIENTO — Infracción de Propiedad Intelectual — Ref. PI/2026/217",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_023.txt",
+    "subject": "RE: BUROFAX — Incumplimiento Contractual Obra Las Acacias",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_024.txt",
+    "subject": "RE: Revisión NDA — Proyecto de Colaboración Tecnológica — Ref. NDA/2026/TEC/55",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_025.txt",
+    "subject": "RE: URGENTE: Notificación de Demanda Laboral — Expediente 2026/SOC/1187",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_026.txt",
+    "subject": "RE: Consulta Derecho Sucesorio — Herencia D. José Mª Alcántara — Ref. SUC/2026/044",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_027.txt",
+    "subject": "RE: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_028.txt",
+    "subject": "REQUERIMIENTO — Infracción de Derechos de Propiedad Intelectual — Ref. PI/2026/217",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_029.txt",
+    "subject": "RE: Sanción CNMC — Valoración y estrategia — Exp. S/0589/2026",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_030.txt",
+    "subject": "BUROFAX ELECTRÓNICO — Aviso Formal de Incumplimiento Contractual Obra Las Acacias",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_031.txt",
+    "subject": "RE: Impugnación Acuerdos Junta — Documentación adicional",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_032.txt",
+    "subject": "URGENTE: Notificación de Demanda Laboral — Expediente 2026/SOC/1187",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_033.txt",
+    "subject": "Consulta sobre Contrato de Arrendamiento — Ref. 2026/ARR/0341",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_034.txt",
+    "subject": "Revisión NDA — Proyecto de Colaboración Tecnológica — Ref. NDA/2026/TEC/55",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_035.txt",
+    "subject": "Urgente — Incumplimiento constructora en Obra Las Acacias",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_036.txt",
+    "subject": "RE: Impugnación de Acuerdos de Junta General — Sociedad Mediana S.L. — Exp. MER/2026/339",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_037.txt",
+    "subject": "Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_038.txt",
+    "subject": "Urgente — Uso no autorizado de mi obra por MediaHouse Digital",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_039.txt",
+    "subject": "Urgente — Sanción CNMC 2.350.000 EUR — Exp. S/0589/2026",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_040.txt",
+    "subject": "Consulta Derecho Sucesorio — Herencia D. José Mª Alcántara — Ref. SUC/2026/044",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_041.txt",
+    "subject": "Consulta urgente — Junta General Extraordinaria Sociedad Mediana S.L.",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_042.txt",
+    "subject": "Proyecto Ámbar — Inicio Due Diligence Legal — Tecnalia Systems",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_001.txt",
+    "subject": "URGENTE: Tu cuenta ha sido bloqueada",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_002.txt",
+    "subject": "Tu suscripción ha sido cancelada",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_003.txt",
+    "subject": "Gana $5000 semanales con IA",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_004.txt",
+    "subject": "Recordatorio: Cambio de contraseña mensual",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_005.txt",
+    "subject": "Respuesta automática: Fuera de la oficina",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_006.txt",
+    "subject": "15 nuevos empleos para 'Abogado Senior'",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_007.txt",
+    "subject": "Tu paquete está en camino",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_008.txt",
+    "subject": "Elimina el estrés con estas gomitas mágicas",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_009.txt",
+    "subject": "Notificación: Reunión de socios @ Mié 18 mar 2026 09:00",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  },
+  {
+    "filename": "email_dirty_010.txt",
+    "subject": "Mantenimiento programado de servidores",
+    "classification": "LEGITIMO",
+    "reason": "Error in LLM curation fallback"
+  }
+]

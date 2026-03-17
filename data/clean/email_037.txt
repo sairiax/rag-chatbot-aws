@@ -1,0 +1,8 @@
+De: D. Pablo Rueda González <p.rueda@techsolutions.io>
+Para: Dra. Nuria Camps Ferrer <ncamps@campsferrer-legal.com>
+Fecha: 2026-03-03 01:03:00
+Adjuntos: 03_Consulta_RGPD_Transferencia_Datos.docx
+ 
+Asunto: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089
+Cuerpo:
+Estimada Dra. Camps, migramos nuestra plataforma SaaS a servidores en EE.UU. y necesitamos asesoramiento urgente sobre la legalidad de transferir datos de ciudadanos europeos. Adjunto el documento con nuestra consulta detallada y el inventario de datos para su análisis.

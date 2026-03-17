@@ -22,13 +22,17 @@ class Settings(BaseSettings):
 
     # ── ChromaDB ──────────────────────────────────────────────────────────────
     chroma_persist_dir: str = Field("./data/chroma_db", alias="CHROMA_PERSIST_DIR")
-    chroma_collection_name: str = Field("rag_university", alias="CHROMA_COLLECTION_NAME")
+    chroma_collection_name: str = Field("legalmail_rag", alias="CHROMA_COLLECTION_NAME")
 
     # ── Text Splitting ────────────────────────────────────────────────────────
     chunk_size: int = Field(1000, alias="CHUNK_SIZE")
     chunk_overlap: int = Field(200, alias="CHUNK_OVERLAP")
 
+    # ── Ingestion ─────────────────────────────────────────────────────────────
+    enable_curation: bool = Field(False, alias="ENABLE_CURATION")
+    email_data_dir: str = Field("./data/clean", alias="EMAIL_DATA_DIR")
+
     # ── Retrieval ─────────────────────────────────────────────────────────────
-    top_k: int = Field(5, alias="TOP_K")
+    top_k: int = Field(15, alias="TOP_K")
 
     model_config = {"env_file": ".env", "populate_by_name": True, "extra": "ignore"}

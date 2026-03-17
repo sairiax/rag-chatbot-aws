@@ -1,0 +1,8 @@
+De: Soporte Técnico Vega <soporte@vegaabogados.mx>
+Para: Laura Díaz <laura.diaz@garciayasociados.com>
+Fecha: 2026-03-17 16:50:00
+Adjuntos: pruebas_adjuntas.pdf
+ 
+Asunto: Mantenimiento programado de servidores
+Cuerpo:
+Estimados todos, este viernes a partir de las 22:00 horas realizaremos un mantenimiento preventivo en el servidor de correos. El servicio se verá interrumpido por aproximadamente 2 horas.

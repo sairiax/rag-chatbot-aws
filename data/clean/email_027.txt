@@ -1,0 +1,8 @@
+De: Dra. Nuria Camps Ferrer <ncamps@campsferrer-legal.com>
+Para: D. Pablo Rueda González <p.rueda@techsolutions.io>
+Fecha: 2026-03-07 02:14:00
+Adjuntos: 03_Consulta_RGPD_Transferencia_Datos.docx
+ 
+Asunto: RE: Consulta RGPD — Transferencia Internacional de Datos — Ref. PRIV/2026/089
+Cuerpo:
+Estimado Sr. Rueda, tal como detallo en el documento adjunto, si su proveedor no está certificado en el EU-U.S. Data Privacy Framework son necesarias Cláusulas Contractuales Tipo (CCT). El DPA además carece de la cláusula de notificación de brechas en 72 h y las medidas técnicas del art. 32 RGPD. Propongo videollamada el jueves 26/03 a las 15:00 h para revisar los puntos pendientes.
