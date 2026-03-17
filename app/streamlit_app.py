@@ -222,17 +222,23 @@ def _render_sources(sources: List) -> None:
                 if meta.get("has_attachments"):
                     parts.append(f"📎 {meta.get('attachments')}")
                 
-                # Format cosine similarity score as percentage
-                if "cosine_score" in meta:
-                    score = meta["cosine_score"]
-                    # Usually Chroma cosine distance is returned as distance (0 = identical, 2 = opposite direction)
-                    # Convert distance to similarity percentage: (2 - distance) / 2 * 100
-                    # or if it returns 1 - cosine_similarity (0 = identical, 1 = orthogonal, 2 = opposite)
-                    # We assume it's distance, so similarity is roughly (1 - score/2) * 100
-                    # or simpler: (1 - score) * 100 if score is between 0 and 1
+                # Format similarity score as percentage with color coding
+                if "similarity_score" in meta:
                     try:
-                        sim_pct = max(0, min(100, (1.0 - float(score)) * 100.0))
-                        parts.append(f"🎯 Relevancia: {sim_pct:.1f}%")
+                        score = float(meta["similarity_score"])
+                        sim_pct = max(0, min(100, score * 100.0))
+                        
+                        # Determine color emoji
+                        if sim_pct >= 85:
+                            color_emoji = "🟢"
+                        elif sim_pct >= 70:
+                            color_emoji = "🟡"
+                        elif sim_pct >= 50:
+                            color_emoji = "🟠"
+                        else:
+                            color_emoji = "🔴"
+                            
+                        parts.append(f"{color_emoji} Relevancia: {sim_pct:.1f}%")
                     except (ValueError, TypeError):
                         pass
                 

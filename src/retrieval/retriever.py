@@ -44,14 +44,15 @@ class SmartRetriever:
         top_k = k or self.settings.top_k
 
         def _get_docs_with_scores(query: str) -> List[Document]:
-            # For Chroma, lower distance logic applies if distance metric is L2 or Cosine
+            # docs_with_scores from similarity_search_with_relevance_scores
+            # returns normalized similarity scores [0, 1] where 1 is perfect match
             docs_with_scores = self.vector_store.similarity_search_with_score(
                 query, k=top_k, filter=filter_dict
             )
             docs = []
             for doc, score in docs_with_scores:
-                # Add score to metadata
-                doc.metadata["cosine_score"] = score
+                # Use similarity score directly (already converted by LangChain from distance)
+                doc.metadata["similarity_score"] = score
                 docs.append(doc)
             return docs
 

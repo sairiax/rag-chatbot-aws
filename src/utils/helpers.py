@@ -50,9 +50,20 @@ def build_metadata_filter(
     if thread_id:
         conditions.append({"thread_id": thread_id})
         
-    # Chroma standard operators: $contains
+    # Chroma standard operators: exact match for year and month
     if date:
-        conditions.append({"date": {"$contains": date}})
+        try:
+            # Expected format: "YYYY-MM"
+            parts = date.split("-")
+            if len(parts) == 2:
+                conditions.append({"year": int(parts[0])})
+                conditions.append({"month": int(parts[1])})
+            else:
+                # Fallback to exact string match if format is different
+                conditions.append({"date": date})
+        except (ValueError, TypeError):
+            # Fallback if parsing fails
+            conditions.append({"date": date})
 
     if not conditions:
         return None
